@@ -50,9 +50,8 @@ fn round(target: f64, precision: u32) -> f64 {
 
 #[cfg(test)]
 mod tests {
-    use chrono::{Utc, NaiveDateTime, DateTime};
-
-    use crate::{TimeLeftTime, TimeWindow};
+    use super::*;
+    use chrono::NaiveDateTime;
 
     fn create_time_from(datetime: &str) -> TimeLeftTime {
         let t: NaiveDateTime = NaiveDateTime::parse_from_str(datetime, "%Y-%m-%d %H:%M:%S").unwrap();

@@ -2,6 +2,10 @@
 name = "time-left"
 version = "0.1.0"
 edition = "2021"
+license = "MIT"
+description = "Calculate relative time passed, left and percentage for a point in a time window"
+repository = "https://github.com/jonilappalainen/time-left"
+homepage = "https://github.com/jonilappalainen/time-left"
 
 [dependencies]
 chrono = "0.4.23"
