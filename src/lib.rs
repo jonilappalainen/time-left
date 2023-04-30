@@ -27,13 +27,20 @@ impl TimeWindow {
             total_millis: 0,
             left_millis: 0,
             passed_millis: 0,
-            percentage: 0.0
+            percentage: 0.0,
         }
     }
 
     pub fn set_point(&mut self, t: TimePoint) {
         self.tx = Some(t);
         self.calculate();
+    }
+
+    /**
+     * get left time in days
+     * */
+    pub fn get_left_days(&self) -> f64 {
+        return (self.left_millis as f64)/(1000.0*60.0*60.0*24.0);
     }
 
     fn calculate(&mut self) {
@@ -88,5 +95,13 @@ mod tests {
         day.set_point(create_time_from("2023-01-01 13:31:45"));
 
         assert_eq!(0.564, day.percentage);
+    }
+
+    #[test]
+    fn given_point_in_window_when_left_days_then_returns_correct_value() {
+        let mut window = TimeWindow::new(create_time_from("2023-01-01 00:00:00"), create_time_from("2023-01-05 00:00:00"));
+        window.set_point(create_time_from("2023-01-02 13:31:45"));
+
+        assert_eq!(2.436284722222222, window.get_left_days());
     }
 }
