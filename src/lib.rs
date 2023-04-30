@@ -1,12 +1,12 @@
 mod rounding;
 use chrono::{DateTime, Utc};
 
-type TimeLeftTime = DateTime<Utc>;
+type TimePoint = DateTime<Utc>;
 
 pub struct TimeWindow {
-    t1: TimeLeftTime,
-    t2: TimeLeftTime,
-    tx: Option<TimeLeftTime>,
+    t1: TimePoint,
+    t2: TimePoint,
+    tx: Option<TimePoint>,
     total_millis: u64,
     left_millis: u64,
     passed_millis: u64,
@@ -14,7 +14,7 @@ pub struct TimeWindow {
 }
 
 impl TimeWindow {
-    pub fn new(t1: TimeLeftTime, t2: TimeLeftTime) -> Self {
+    pub fn new(t1: TimePoint, t2: TimePoint) -> Self {
         return Self {
             t1,
             t2,
@@ -26,7 +26,7 @@ impl TimeWindow {
         }
     }
 
-    pub fn set_point(&mut self, t: TimeLeftTime) {
+    pub fn set_point(&mut self, t: TimePoint) {
         self.tx = Some(t);
         self.calculate();
     }
@@ -49,7 +49,7 @@ mod tests {
     use super::*;
     use chrono::NaiveDateTime;
 
-    fn create_time_from(datetime: &str) -> TimeLeftTime {
+    fn create_time_from(datetime: &str) -> TimePoint {
         let t: NaiveDateTime = NaiveDateTime::parse_from_str(datetime, "%Y-%m-%d %H:%M:%S").unwrap();
         return DateTime::from_utc(t, Utc);
     }
