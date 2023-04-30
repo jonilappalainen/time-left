@@ -29,7 +29,37 @@ impl TimeLeft {
         let perc = left_seconds as f64 / DAY_AS_SECONDS as f64;
         return round(perc, 3);
     }
+}
 
+pub struct TimeWindow {
+    t1: TimeLeftTime,
+    t2: TimeLeftTime,
+    tx: Option<TimeLeftTime>
+}
+
+impl TimeWindow {
+    pub fn new(t1: TimeLeftTime, t2: TimeLeftTime) -> Self {
+        return Self {
+            t1,
+            t2,
+            tx: None
+        }
+    }
+
+    pub fn set_point(&mut self, t: TimeLeftTime) {
+        self.tx = Some(t);
+    }
+
+    pub fn get_percentage(&self) -> f64 {
+        let t1 = self.t1.timestamp_millis();
+        let t2 = self.t2.timestamp_millis();
+        let tx = self.tx.unwrap().timestamp_millis();
+        let total = t2 - t1;
+        let past = tx - t1;
+        // let left = t2 - tx;
+        let perc = past as f64 / total as f64;
+        return round(perc, 3);
+    }
 }
 
 // TODO: move this to separate file
@@ -42,7 +72,7 @@ fn round(target: f64, precision: u32) -> f64 {
 mod tests {
     use chrono::{Utc, NaiveDateTime, DateTime};
 
-    use crate::{TimeLeft, TimeLeftTime};
+    use crate::{TimeLeft, TimeLeftTime, TimeWindow};
 
     fn create_time_from(datetime: &str) -> TimeLeftTime {
         let t: NaiveDateTime = NaiveDateTime::parse_from_str(datetime, "%Y-%m-%d %H:%M:%S").unwrap();
@@ -81,6 +111,39 @@ mod tests {
         let expected = 0.436;
 
         let actual = TimeLeft::new(create_time_from("2023-01-01 13:31:45")).get_day_left();
+
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn given_point_as_half_when_get_pecentage_then_returns_half() {
+        let expected = 0.5;
+        let mut tw = TimeWindow::new(create_time_from("2023-01-01 12:00:00"), create_time_from("2023-01-01 13:00:00"));
+
+        tw.set_point(create_time_from("2023-01-01 12:30:00"));
+        let actual = tw.get_percentage();
+
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn given_point_as_t1_when_get_pecentage_then_returns_0() {
+        let expected = 0.0;
+        let mut tw = TimeWindow::new(create_time_from("2023-01-01 12:00:00"), create_time_from("2023-01-01 13:00:00"));
+
+        tw.set_point(create_time_from("2023-01-01 12:00:00"));
+        let actual = tw.get_percentage();
+
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn given_point_as_t2_when_get_pecentage_then_returns_1() {
+        let expected = 1.0;
+        let mut tw = TimeWindow::new(create_time_from("2023-01-01 12:00:00"), create_time_from("2023-01-01 13:00:00"));
+
+        tw.set_point(create_time_from("2023-01-01 13:00:00"));
+        let actual = tw.get_percentage();
 
         assert_eq!(expected, actual);
     }

@@ -3,7 +3,7 @@
 Get past, left and percentage of a point in a time window.
 
 ```
-ts------tx-------------te`
+t1------tx-------------t2`
     ^           ^
    past       left
 ```
