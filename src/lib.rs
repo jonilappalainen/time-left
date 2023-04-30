@@ -1,16 +1,21 @@
 mod rounding;
-use chrono::{DateTime, Utc};
+use chrono::{DateTime, Utc, NaiveDateTime};
 
 type TimePoint = DateTime<Utc>;
+
+pub fn create_time_point_from_string(datetime: &str) -> TimePoint {
+    let t: NaiveDateTime = NaiveDateTime::parse_from_str(datetime, "%Y-%m-%d %H:%M:%S").unwrap();
+    return DateTime::from_utc(t, Utc);
+}
 
 pub struct TimeWindow {
     t1: TimePoint,
     t2: TimePoint,
     tx: Option<TimePoint>,
-    total_millis: u64,
-    left_millis: u64,
-    passed_millis: u64,
-    percentage: f64
+    pub total_millis: u64,
+    pub left_millis: u64,
+    pub passed_millis: u64,
+    pub percentage: f64
 }
 
 impl TimeWindow {
@@ -47,7 +52,6 @@ impl TimeWindow {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use chrono::NaiveDateTime;
 
     fn create_time_from(datetime: &str) -> TimePoint {
         let t: NaiveDateTime = NaiveDateTime::parse_from_str(datetime, "%Y-%m-%d %H:%M:%S").unwrap();
