@@ -1,10 +1,12 @@
 # time-Left
 
-Get past, left and percentage of a point in a time window.
+Calculate relative time passed, left and percentage for a point in a time window
 
 ```
+    percentage
+        v
 t1------tx-------------t2`
     ^           ^
-   past       left
+  passed       left
 ```
 
